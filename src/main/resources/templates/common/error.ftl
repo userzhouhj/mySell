@@ -22,7 +22,7 @@
 </body>
 
 <script>
-    setTimeout('location.href="${url}"', 300000);
+    setTimeout('location.href="${url}"', 3000000000000);
 </script>
 
 </html>

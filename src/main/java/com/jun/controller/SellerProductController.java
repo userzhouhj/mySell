@@ -116,8 +116,6 @@ public class SellerProductController {
     public ModelAndView save(@Valid ProductForm productForm,
                              BindingResult bindingResult){
         ModelAndView model = new ModelAndView();
-        System.out.println("111111111111111");
-        System.out.println(productForm.getProductId());
 
         if(bindingResult.hasErrors()){
             model.addObject("error","数据绑定错误");
@@ -129,15 +127,13 @@ public class SellerProductController {
         Product product = new Product();
         try{
             if(productForm.getProductId() == null || productForm.getProductId().equals("")){//新增
-                System.out.println("新增");
+
                 String productId = KeyUtil.getKey();
-                product.setProductId(productId);
+                productForm.setProductId(productId);
                 BeanUtils.copyProperties(productForm,product);
-                System.out.println(productId);
-                System.out.println(productForm.getProductPrice());
                 productService.save(product);
             }else{//修改
-                System.out.println("修改");
+
                 BeanUtils.copyProperties(productForm,product);
                 productService.update(product);
             }

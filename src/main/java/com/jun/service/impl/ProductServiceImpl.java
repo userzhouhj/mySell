@@ -7,6 +7,10 @@ import com.jun.dto.CartDto;
 import com.jun.enums.ProductStatusEnum;
 import com.jun.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,16 +26,19 @@ public class ProductServiceImpl implements ProductService {
 
 
     @Override
+    @Cacheable(cacheNames = "product",key = "'allProduct'")
     public List<Product> selectAllProduct() {
         return productMapper.selectByExample(null);
     }
 
     @Override
+    @Cacheable(cacheNames = "product",key = "'priduct_'+#productId")
     public Product selectProductById(String productId) {
         return productMapper.selectByPrimaryKey(productId);
     }
 
     @Override
+    @Cacheable(cacheNames = "product",key = "'allUpProduct'")//用户行为
     public List<Product> selectAllUpProduct() {
         ProductExample productExample = new ProductExample();
         ProductExample.Criteria criteria = productExample.createCriteria();
@@ -40,6 +47,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Cacheable(cacheNames = "product",key = "'product_type_'+#type")//用户行为
     public List<Product> selectProductByType(Integer type) {
         ProductExample productExample = new ProductExample();
         ProductExample.Criteria criteria = productExample.createCriteria();
@@ -48,6 +56,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    //@CacheEvict(cacheNames = "product",key = "'allProduct'")
+    @Caching(evict = {
+            @CacheEvict(cacheNames = "product",key = "'allProduct'"),
+            @CacheEvict(cacheNames = "product",key = "'allUpProduct'")},
+            put = @CachePut(cacheNames = "product",key = "'product_'+#product.productId"))
     public Product save(Product product) {
 
         if(product != null){
@@ -61,18 +74,30 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    //@Cacheable(cacheNames = "product",key = "'priduct_'+#product.productId")
+    @Caching(evict = {
+            @CacheEvict(cacheNames = "product",key = "'allProduct'"),
+            @CacheEvict(cacheNames = "product",key = "'allUpProduct'")},
+            put = @CachePut(cacheNames = "product",key = "'product_'+#product.productId"))
     public Product update(Product product) {
 
         if(product.getProductId() == null){
             return  null;
         }
+        Product target = productMapper.selectByPrimaryKey(product.getProductId());
         product.setUpdateTime(new Date());
+        product.setCreateTime(target.getCreateTime());
         productMapper.updateByPrimaryKey(product);
 
         return product;
     }
 
     @Override
+    @Caching(evict = {
+            @CacheEvict(cacheNames = "product",key = "'allProduct'"),
+            @CacheEvict(cacheNames = "product",key = "'allUpProduct'"),
+            @CacheEvict(cacheNames = "product",key = "'product_'+#id")}
+            )
     public void deleteById(String id) {
         if(productMapper.selectByPrimaryKey(id) == null){
             throw new RuntimeException("商品不存在");
@@ -115,6 +140,10 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Caching(evict = {
+            @CacheEvict(cacheNames = "product",key = "'allProduct'"),
+            @CacheEvict(cacheNames = "product",key = "'allUpProduct'")},
+            put = @CachePut(cacheNames = "product",key = "'product_'+#productId"))
     public Product onSell(String productId) {
         Product product = productMapper.selectByPrimaryKey(productId);
         if(product == null){
@@ -131,6 +160,10 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Caching(evict = {
+            @CacheEvict(cacheNames = "product",key = "'allProduct'"),
+            @CacheEvict(cacheNames = "product",key = "'allUpProduct'")},
+            put = @CachePut(cacheNames = "product",key = "'product_'+#productId"))
     public Product offSell(String productId) {
         Product product = productMapper.selectByPrimaryKey(productId);
         if(product == null){

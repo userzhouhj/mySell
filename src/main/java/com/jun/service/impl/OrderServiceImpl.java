@@ -13,6 +13,8 @@ import com.jun.service.ProductService;
 import com.jun.utils.KeyUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,6 +43,7 @@ public class OrderServiceImpl implements OrderSerivce {
 
     @Override
     @Transactional
+    @CachePut(cacheNames = "order",key = "'order_'+#result.orderId")
     public OrderDto createOrder(OrderDto orderDto) {
 
         BigDecimal orderAmount = new BigDecimal(0);
@@ -57,6 +60,8 @@ public class OrderServiceImpl implements OrderSerivce {
             //3.1订单详情入库
             orderDetail.setDetailId(KeyUtil.getKey());
             orderDetail.setOrderId(orderId);
+            orderDetail.setCreateTime(new Date());
+            orderDetail.setUpdateTime(new Date());
             BeanUtils.copyProperties(product,orderDetail);
         }
 
@@ -83,6 +88,7 @@ public class OrderServiceImpl implements OrderSerivce {
 
     /* 查询单个订单*/
     @Override
+    @Cacheable(cacheNames = "order",key = "'order_'+#orderId")
     public OrderDto selectOneOrder(String orderId) {
         OrderDto orderDto = new OrderDto();
         Order order = orderMapper.selectByPrimaryKey(orderId);
@@ -100,6 +106,7 @@ public class OrderServiceImpl implements OrderSerivce {
 
     /*查询指定用户的所有订单*/
     @Override
+
     public List<OrderDto> selectOrderList(String buyerOpenId) {
         OrderExample orderExample = new OrderExample();
         OrderExample.Criteria criteria = orderExample.createCriteria();
@@ -122,6 +129,7 @@ public class OrderServiceImpl implements OrderSerivce {
 
     /*取消订单*/
     @Override
+    @CachePut(cacheNames = "order",key = "'order_'+#result.orderId")
     public OrderDto cancel(OrderDto orderDto) {
 
         Order order = new Order();
@@ -151,6 +159,7 @@ public class OrderServiceImpl implements OrderSerivce {
 
     /*完结订单*/
     @Override
+    @CachePut(cacheNames = "order",key = "'order_'+#result.orderId")
     public OrderDto finish(OrderDto orderDto) {
         if(!orderDto.getOrderStatus().equals(OrderStatusEnum.NEW.getCode())){//判断状态
             throw new RuntimeException("订单状态异常");
@@ -166,6 +175,7 @@ public class OrderServiceImpl implements OrderSerivce {
 
     /*支付订单*/
     @Override
+    @CachePut(cacheNames = "order",key = "'order_'+#result.orderId")
     public OrderDto paid(OrderDto orderDto) {
         if(!orderDto.getOrderStatus().equals(OrderStatusEnum.NEW.getCode())){//判断状态
             throw new RuntimeException("订单状态异常,订单完结或取消");
@@ -183,6 +193,7 @@ public class OrderServiceImpl implements OrderSerivce {
 
     /*店家查询所有订单*/
     @Override
+    @Cacheable(cacheNames = "order",key = "'allOrder'")
     public List<OrderDto> getAllOrderList() {
         List<OrderDto> orderDtoList = new ArrayList<>();
         OrderExample orderExample = new OrderExample();

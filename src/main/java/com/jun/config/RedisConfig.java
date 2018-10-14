@@ -29,12 +29,14 @@ public class RedisConfig{
         return template;
     }
 
-//    @Bean
-//    public RedisCacheManager categoryRedisCacheManager(RedisTemplate<Object, ProductCategory> categoryRedisTemplate){
-//        RedisCacheManager cacheManager = new RedisCacheManager(categoryRedisTemplate);
-//        cacheManager.setUsePrefix(true);
-//
-//        return cacheManager;
-//    }
+    @Bean
+    public RedisCacheManager categoryRedisCacheManager(RedisTemplate<Object, ProductCategory> categoryRedisTemplate){
+        RedisCacheManager cacheManager = new RedisCacheManager(categoryRedisTemplate);
+        cacheManager.setUsePrefix(true);
+
+        return cacheManager;
+    }
+
+
 
 }

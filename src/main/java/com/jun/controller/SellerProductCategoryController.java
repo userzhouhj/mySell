@@ -36,7 +36,10 @@ public class SellerProductCategoryController {
             model.addObject("categoryList",productCategoryList);
             model.setViewName("category/list");
         }catch(Exception e){
+            model.addObject("error",e.getMessage());
             model.setViewName("common/error");
+            model.addObject("url","www.baidu.com");
+            return model;
         }
         return model;
     }
@@ -52,6 +55,8 @@ public class SellerProductCategoryController {
 
         }catch(Exception e){
             model.setViewName("common/error");
+            model.addObject("error",e.getMessage());
+            model.addObject("url","www.baidu.com");
             return model;
         }
         model.setViewName("category/index");

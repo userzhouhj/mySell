@@ -4,6 +4,11 @@ spring:
     password: 150306
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://localhost:3306/shell?characterEncoding=utf-8&useSSL=false
+
+  redis:
+    host: 39.106.35.109
+    port: 6379
+    password: 123456
 #    type: org.apache.commons.dbcp2.BasicDataSource
 
 
@@ -11,7 +16,8 @@ spring:
 mybatis:
   mapper-locations: classpath:mapper/*Mapper.xml
   type-aliases-package: com.jun.domin
-
 server:
-  servlet:
-    context-path: /sell
+  context-path: /sell
+logging:
+  level:
+    com.jun.dao: debug

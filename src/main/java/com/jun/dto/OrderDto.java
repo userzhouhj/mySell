@@ -7,12 +7,13 @@ import com.jun.enums.PayStatusEnum;
 import com.jun.utils.EnumUtil;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
 @Data
-public class OrderDto {
+public class OrderDto implements Serializable {
 
     private String orderId;
 
