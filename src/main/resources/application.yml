@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    username: root
+    password: 150306
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/shell?characterEncoding=utf-8&useSSL=false
+#    type: org.apache.commons.dbcp2.BasicDataSource
+
+
+#mybatis配置
+mybatis:
+  mapper-locations: classpath:mapper/*Mapper.xml
+  type-aliases-package: com.jun.domin
+
+server:
+  servlet:
+    context-path: /sell
