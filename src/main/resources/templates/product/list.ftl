@@ -60,22 +60,22 @@
                     <#if currentPage lte 1>
                         <li class="disabled"><a href="#">上一页</a></li>
                     <#else>
-                        <li><a href="/sell/seller/order/list?page=${currentPage - 1}&size=${size}">上一页</a></li>
+                        <li><a href="/sell/seller/product/list?page=${currentPage - 1}&size=${size}">上一页</a></li>
                     </#if>
 
-                    <#--<#list 1..productPage.getTotalPages() as index>-->
-                        <#--<#if currentPage == index>-->
-                            <#--<li class="disabled"><a href="#">${index}</a></li>-->
-                        <#--<#else>-->
-                            <#--<li><a href="/sell/seller/order/list?page=${index}&size=${size}">${index}</a></li>-->
-                        <#--</#if>-->
-                    <#--</#list>-->
+                    <#list 1..pageInfo.getPages() as index>
+                        <#if currentPage == index>
+                            <li class="disabled"><a href="#">${index}</a></li>
+                        <#else>
+                            <li><a href="/sell/seller/product/list?page=${index}&size=${size}">${index}</a></li>
+                        </#if>
+                    </#list>
 
-                    <#--<#if currentPage gte 0>-->
-                        <#--<li class="disabled"><a href="#">下一页</a></li>-->
-                    <#--<#else>-->
-                        <#--<li><a href="/sell/seller/order/list?page=${currentPage + 1}&size=${size}">下一页</a></li>-->
-                    <#--</#if>-->
+                    <#if currentPage gte pageInfo.getPages()>
+                        <li class="disabled"><a href="#">下一页</a></li>
+                    <#else>
+                        <li><a href="/sell/seller/product/list?page=${currentPage + 1}&size=${size}">下一页</a></li>
+                    </#if>
                     </ul>
                 </div>
             </div>

@@ -1,12 +1,14 @@
 package com.jun.controller;
 
 
+import com.github.pagehelper.PageInfo;
 import com.jun.domain.Product;
 import com.jun.domain.ProductCategory;
 import com.jun.form.ProductForm;
 import com.jun.service.ProductCategoryService;
 import com.jun.service.ProductService;
 import com.jun.utils.KeyUtil;
+import com.jun.utils.PageUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,6 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/seller/product")
@@ -31,14 +34,21 @@ public class SellerProductController {
     private ProductCategoryService productCategoryService;
 
     @GetMapping("/list")
-    public ModelAndView list(@RequestParam(value = "size",required = false,defaultValue = "10") Integer size,
+    public ModelAndView list(@RequestParam(value = "size",required = false,defaultValue = "5") Integer size,
                              @RequestParam(value = "page",required = false,defaultValue = "1") Integer page){
         ModelAndView model = new ModelAndView();
 
         List<Product> productList = productService.selectAllProduct();
+        int total = PageUtil.getTotal(productList,size);//总页数
+
+        productList = PageUtil.getList(productList,page,size);
+
+        PageInfo pageInfo = PageUtil.getPageInfo(productList,total,page,size);
+
         model.addObject("size",size);
         model.addObject("currentPage",page);
         model.addObject("productList",productList);
+        model.addObject("pageInfo",pageInfo);
         model.setViewName("product/list");
         return model;
     }

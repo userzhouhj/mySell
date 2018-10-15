@@ -196,8 +196,8 @@ public class OrderServiceImpl implements OrderSerivce {
     @Cacheable(cacheNames = "order",key = "'allOrder'")
     public List<OrderDto> getAllOrderList() {
         List<OrderDto> orderDtoList = new ArrayList<>();
-        OrderExample orderExample = new OrderExample();
-        List<Order> orderList = orderMapper.selectByExample(orderExample);
+
+        List<Order> orderList = orderMapper.selectByExample(null);
         for(Order order : orderList){
             OrderDto orderDto = new OrderDto();
             BeanUtils.copyProperties(order,orderDto);

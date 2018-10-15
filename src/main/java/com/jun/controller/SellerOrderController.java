@@ -1,9 +1,11 @@
 package com.jun.controller;
 
 
+import com.github.pagehelper.PageInfo;
 import com.jun.domain.OrderDetail;
 import com.jun.dto.OrderDto;
 import com.jun.service.OrderSerivce;
+import com.jun.utils.PageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,12 +30,19 @@ public class SellerOrderController {
      */
     @GetMapping("/list")
     public ModelAndView list(@RequestParam(value = "page",defaultValue = "1") Integer page,
-                             @RequestParam(value = "size",defaultValue = "10") Integer size){
+                             @RequestParam(value = "size",defaultValue = "5") Integer size){
         ModelAndView model = new ModelAndView();
         List<OrderDto> orderDtoList = orderSerivce.getAllOrderList();
+
+        int total = PageUtil.getTotal(orderDtoList,size);//总页数
+
+        orderDtoList = PageUtil.getList(orderDtoList,page,size);
+
+        PageInfo pageInfo = PageUtil.getPageInfo(orderDtoList,total,page,size);
         model.addObject("orderList",orderDtoList);
         model.addObject("currentPage",page);
         model.addObject("size",size);
+        model.addObject("pageInfo",pageInfo);
         model.setViewName("order/list");
         return model;
     }

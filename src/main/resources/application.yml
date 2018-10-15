@@ -21,3 +21,12 @@ server:
 logging:
   level:
     com.jun.dao: debug
+
+#配置分页插件
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
+
+

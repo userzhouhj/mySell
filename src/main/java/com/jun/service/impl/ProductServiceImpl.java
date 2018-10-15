@@ -1,5 +1,6 @@
 package com.jun.service.impl;
 
+import com.github.pagehelper.PageHelper;
 import com.jun.dao.ProductMapper;
 import com.jun.domain.Product;
 import com.jun.domain.ProductExample;
@@ -28,6 +29,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Cacheable(cacheNames = "product",key = "'allProduct'")
     public List<Product> selectAllProduct() {
+
         return productMapper.selectByExample(null);
     }
 
