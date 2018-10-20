@@ -29,4 +29,10 @@ pagehelper:
   supportMethodsArguments: true
   params: count=countSql
 
-
+WeChat:
+  appId: wxf9192066845a5d07
+  appSecret: debc8ac1e607ccf8367d63a3d6bb7c7d
+  mchId:
+  mchKey:
+  keyPath:
+  notifyUrl:
